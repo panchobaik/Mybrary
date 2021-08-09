@@ -7,11 +7,12 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const port = 3000;
 
 const indexRouter = require('./routes/index');
 const authorRouter = require('./routes/authors');
+const bookRouter = require('./routes/books');
 
 app.set('view engine', 'ejs'); //view engine을 ejs로 설정
 app.set('views', __dirname + '/views'); // views을 가져올 폴더 설정 (body에 해당하는 파일들 배치)
@@ -44,6 +45,7 @@ db.once('open', () => console.log('Connected to Mongoose'));
 
 app.use('/', indexRouter);
 app.use('/authors', authorRouter);
+app.use('/books', bookRouter);
 
 //특정 port 번호에 listing 성공하면 해당 callback함수 실행
 app.listen(process.env.PORT || port, () => {

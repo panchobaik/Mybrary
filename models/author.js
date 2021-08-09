@@ -1,5 +1,7 @@
+
 // Mongoose는 Node.js와 MongoDB를 연결하는 ODM (object document mapping)
 // SQL에서의 table 개념 대신에, Mongoose는 Schema를 통해서 Table처럼 데이터 정리
+// MVP에서 Model에 해당
 const mongoose = require('mongoose');
 const authorSchema = new mongoose.Schema({
     name: {

@@ -1,14 +1,16 @@
-
 const express = require('express');
 const Author = require('../models/author');
 const router = express.Router();
 
 
-// All authors Route
+// All authors Route + Search Author
 router.get('/', async (req, res) => {
+
     let searchOptions = {};
     if (req.query.name !== null && req.query.name !== '') {
-        searchOptions.name = new RegExp(req.query.name, 'i');
+        searchOptions.name = new RegExp(req.query.name, 'i'); //RegExp : req.query.name 같은 string pattern을 가지는 constructor생성
+        //console.log('searchOptions = ');
+        //console.log(searchOptions);
     }
 
     try {
@@ -30,7 +32,10 @@ router.get('/new', (req, res) => {
 
 // Create Author Route
 router.post('/', async (req, res) => {
-
+    console.log('What is req?');
+    console.log(req.body);
+    console.log('What is res?');
+    console.log(res);
     const author = new Author({
         name: req.body.name, // posting된 body에서 name을 추출해서, name에 적용
     });
@@ -57,10 +62,9 @@ router.post('/', async (req, res) => {
             res.redirect('authors');
         }
     });
+    //res.send('Create');    
+    //res.send(req.body.name); // posting된 body에서 name을 추출 
     */
-    //res.send('Create');
-    
-    //res.send(req.body.name); // posting된 body에서 name을 추출
 });
 
 module.exports = router;
