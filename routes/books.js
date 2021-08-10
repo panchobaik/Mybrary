@@ -6,10 +6,10 @@ const Book = require('../models/book');
 // Cover image file을 uploading하기 위한 multer 모듈 적용
 //const multer = require('multer');
 const path = require('path');
-const fs = require('fs'); // file system
-const uploadPath = path.join('public', Book.coverImageBasePath); //path.join을 통해 public 폴더 내 'uploads/bookCovers'를 연결
-/*
+//const fs = require('fs'); // file system
+//const uploadPath = path.join('public', Book.coverImageBasePath); //path.join을 통해 public 폴더 내 'uploads/bookCovers'를 연결
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+/*
 const storage = multer.diskStorage({ // public디렉토리에 upload된 cover image의 파일명 (filename) 설정
     destination: uploadPath, //upload path inside of this project
     filename: (req, file, callback) => {
@@ -82,9 +82,11 @@ router.post('/', async (req, res) => {
         author: req.body.author,
         publishDate: new Date(req.body.publishDate),
         pageCount: req.body.pageCount,
-        coverImageName: fileName,
+        //coverImageName: fileName, => multer모듈 삭제후, 제거
         description: req.body.description,
     }); 
+
+    saveCover(book, req.body.cover); // FilePond적용후, coverImage를 저장하기 위한 함수
     try {
         const newBook = await book.save();
         //res.redirect(`books/${newBook.id}`);
@@ -92,19 +94,23 @@ router.post('/', async (req, res) => {
         console.log('req.file = ');
         console.log(req.file);
     } catch {
-        if (book.coverImageName != null) {
-            removeBookCover(book.coverImageName);
-        }
+
+        /*if (book.coverImageName != null) {
+            removeBookCover(book.coverImageName); // multer 모듈 대신에 File Encode 적용했기 때문에 불필요한 removeBookCover 함수제거
+        }*/
         renderNewPage(res, book, true);
     }
 });
 
+/*
 function removeBookCover(fileName) {
+    // multer 모듈 대신에 File Encode 적용했기 때문에 불필요한 removeBookCover 함수제거
     // fs.unlink method is used to remove a file or symbolic link from the filesystem.
     fs.unlink(path.join(uploadPath, fileName), err => {
         if (err) console.error(err); // err would be thrown if the method fails
     });
 }
+*/
 
 async function renderNewPage(res, book, hasError = false) {
     try {
@@ -119,6 +125,18 @@ async function renderNewPage(res, book, hasError = false) {
             
     } catch {
         res.redirect('/books'); //error발생될때, localhost:3000/books 페이지로 redirect
+    } 
+}
+
+function saveCover(book, coverEncoded) {
+    if (coverEncoded == null) return;
+
+    const cover = JSON.parse(coverEncoded); // parsing JSON string into a single JSON
+    if (cover !== null && imageMimeTypes.includes(cover.type)) { // File Encode의 JSON구조에서 "type"값이 이미지 type
+        // cover.data를 직접 적용하는 것 대신에, cover.data를 Buffer로 전환해서 적용
+        // Node.js의 Buffer : 데이터가 한장소에서 다른 장소로 이동하는 동안 임시로 저장하는 물리적 메모리 저장소
+        book.coverImage = new Buffer.from(cover.data, 'base64');
+        book.coverImageType = cover.type;
     } 
 }
 

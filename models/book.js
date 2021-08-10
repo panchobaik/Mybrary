@@ -47,13 +47,19 @@ const bookSchema = new mongoose.Schema({
 });
 
 // Virtual is document property that you can get and set but that does not get persisted to MongoDB
+// index.ejs의 src="<%= book.coverImagePath %>"에 해당 정보 전달
 bookSchema.virtual('coverImagePath').get(function() {
     // this를 사용하기 위해서 arrow function 대신에 function() 적용
+    // File Encode에서 사용하는 coverImage + coverImageType 정보 전달
+    if (this.coverImage != null && this.coverImageType != null) {
+        return `data:${this.coverImageType};charset=utf-8;base64,${this.coverImage.toString('base64')}`;
+    }
+    /*
     if (this.coverImageName != null) {
         return path.join('/', coverImageBasePath, this.coverImageName);
-    }
+    }*/
 });
 
 
 module.exports = mongoose.model('Book', bookSchema); //생성된 Schema (=Table)의 명칭을 Book으로 설정
-module.exports.coverImageBasePath = coverImageBasePath; //// Cover image file이 저장되는 경로를 export
+//module.exports.coverImageBasePath = coverImageBasePath; //// Cover image file이 저장되는 경로를 export
