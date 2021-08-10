@@ -16,7 +16,8 @@ const storage = multer.diskStorage({ // public디렉토리에 upload된 cover im
         let fileExt = file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length);
         let indx = file.originalname.indexOf('.');
         let fileName = file.originalname.substring(0, indx);
-        callback(null, fileName + '-' + Date.now() + fileExt);
+        //callback(null, fileName + '-' + Date.now() + fileExt);
+        callback(null, fileName + '-' + Date.now());
     },
     fileFilter: (req, file, callback) => { //fileFilter allows us to actually filter which files our server accepts
         callback(null, imageMimeTypes.includes(file.mimetype));
