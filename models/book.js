@@ -26,12 +26,19 @@ const bookSchema = new mongoose.Schema({
         required: true,
         default: Date.now
     },
-    coverImageName: { 
+    coverImage: { 
+        // multer모듈관련해서 coverImageName이 필요했지만, multer제거 후, coverImageName -> coverImage로 변경. 즉, coverImage자체 저장
         // passing in the image itself into the database. So just pass the name of the image
         // We can just store a single small string and then we can store the actual image itself on our server in the file system
+        type: Buffer, // multer모듈 삭제후, coverImage의 type을 Buffer로 변경
+        required: true,
+    },
+    coverImageType: {
+        // multer모듈 삭제후, cover Image를 rendering하기 위해서 image의 type (PNG, JPEG) 필요
         type: String,
         required: true,
     },
+
     author: { // mongoose에 이미 저장된 author 정보로 부터 가져오는 정보
         type: mongoose.Schema.Types.ObjectId,
         required: true,

@@ -4,12 +4,12 @@ const Author = require('../models/author');
 const Book = require('../models/book');
 
 // Cover image file을 uploading하기 위한 multer 모듈 적용
-const multer = require('multer');
+//const multer = require('multer');
 const path = require('path');
 const fs = require('fs'); // file system
 const uploadPath = path.join('public', Book.coverImageBasePath); //path.join을 통해 public 폴더 내 'uploads/bookCovers'를 연결
+/*
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-
 const storage = multer.diskStorage({ // public디렉토리에 upload된 cover image의 파일명 (filename) 설정
     destination: uploadPath, //upload path inside of this project
     filename: (req, file, callback) => {
@@ -24,13 +24,14 @@ const storage = multer.diskStorage({ // public디렉토리에 upload된 cover im
 });
 
 const upload = multer({
-    /*
-    destination: uploadPath, //upload path inside of this project
-    fileFilter: (req, file, callback) => { //fileFilter allows us to actually filter which files our server accepts
-        callback(null, imageMimeTypes.includes(file.mimetype));
-    }, */
+    
+   // destination: uploadPath, //upload path inside of this project
+    //fileFilter: (req, file, callback) => { //fileFilter allows us to actually filter which files our server accepts
+    //    callback(null, imageMimeTypes.includes(file.mimetype));
+   // }, 
     storage: storage,
 });
+*/
 
 // All Books Route + Search Book : views > index.ejs 
 router.get('/', async (req, res) => {
@@ -70,8 +71,9 @@ router.get('/new', async (req, res) => {
 });
 
 // Create Book Route
-// upload.single('cover') => single file인 'cover'를 uploading
-router.post('/', upload.single('cover'), async (req, res) => {
+// upload.single('cover') => single file인 'cover'를 uploading : outer.post('/', upload.single('cover'), async (req, res)
+// File Encode plugin 적용 후 ,upload.single('cover') 제거 
+router.post('/', async (req, res) => {
 
     const fileName = req.file != null ? req.file.filename : null; //uploading되는 cover image의 이름으로 부터 fileName 설정
     
