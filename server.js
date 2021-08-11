@@ -8,6 +8,7 @@ const express = require('express');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
 //const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 const port = 3000;
 
 const indexRouter = require('./routes/index');
@@ -17,7 +18,9 @@ const bookRouter = require('./routes/books');
 app.set('view engine', 'ejs'); //view engine을 ejs로 설정
 app.set('views', __dirname + '/views'); // views을 가져올 폴더 설정 (body에 해당하는 파일들 배치)
 app.set('layout', 'layouts/layout'); //layout에 적용할 폴더 설정 (header와 footer 정보) 
+
 app.use(expressLayouts);
+app.use(methodOverride('_method')); // "_"를 붙혀서 잘 사용되지 않는 이름으로 만들어서 혼동없이 put 또는 delete 실행
 app.use(express.static('public')); // public폴더에 모든 public views들을 배치
 
 app.use(express.urlencoded({

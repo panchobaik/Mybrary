@@ -1,7 +1,7 @@
 const express = require('express');
 const Author = require('../models/author');
+const Book = require('../models/book');
 const router = express.Router();
-
 
 // All authors Route + Search Author
 router.get('/', async (req, res) => {
@@ -50,21 +50,79 @@ router.post('/', async (req, res) => {
             errorMessage: 'Error creating Author'
         });
     }
-    /*
-    author.save((err, newAuthor) => {
-        if (err) {
-            res.render('authors/new', {
+});
+
+// Show Author + 특정 path를 저장된 author id값으로 설정. 이때, ":"는 id를 변수로 선언 + ":id" is going to be passed along with our request
+router.get('/:id', async (req, res) => {
+    try {
+        // params gives us all parameters that we define inside of our URL paths
+        const author = await Author.findById(req.params.id);
+        const books = await Book.find({author: author.id}).limit(6).exec();
+        res.render('authors/show', {
+            author: author,
+            booksByAuthor: books,
+        });
+    } catch (err) {
+        console.log(err);
+        res.redirect('/');
+    }
+});
+
+// Edit Author + 저장된 author id값을 사용해서 특정 author 내용을 edit
+router.get('/:id/edit', async (req, res) => {
+    try {
+        const author = await Author.findById(req.params.id);
+        res.render('authors/edit', { author: author});
+    } catch {
+        res.redirect('/authors');
+    }
+});
+
+// Update Author + routes를 update하기 위해서 "put" 사용
+router.put('/:id', async (req, res) => {
+    let author;
+    try {
+        author = await Author.findById(req.params.id);
+        author.name = req.body.name;
+        await author.save();    
+        //res.redirect(`/authors/${author.id}`);
+        res.redirect('/authors');
+
+    } catch {
+        if (author == null) {
+            res.redirect('/');
+        } else if (author.name == req.body.name) { 
+            //정상적으로 author.name이 새로운 이름으로 변경확인후 authorSchema.pre('save', ~)을 통해 책 등록에 이미 적용된 author name 변경 방지
+            res.render('authors/edit', {
                 author: author,
-                errorMessage: 'Error creating Author'
+                errorMessage: `Error Updating Author: ${author.name} has books still`,
             });
+
         } else {
-            //res.redirect(`authors/${newAuthor.id}`);
-            res.redirect('authors');
+            res.render('authors/edit', {
+                author: author,
+                errorMessage: 'Error Updating Author',
+            });
         }
-    });
-    //res.send('Create');    
-    //res.send(req.body.name); // posting된 body에서 name을 추출 
-    */
+    }
+});
+
+// Delete Author 
+router.delete('/:id', async (req, res) => {
+    let author;
+    try {
+        author = await Author.findById(req.params.id);
+        await author.remove();
+        res.redirect('/authors');
+
+    } catch {
+        if (author == null) {
+            res.redirect('/');
+        } else {
+            //res.redirect(`/authors/${author.id}`);
+            res.send(`Error Deleting Author : ${author.name} has books still`);
+        }
+    }
 });
 
 module.exports = router;
