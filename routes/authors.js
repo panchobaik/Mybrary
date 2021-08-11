@@ -32,10 +32,10 @@ router.get('/new', (req, res) => {
 
 // Create Author Route
 router.post('/', async (req, res) => {
-    console.log('What is req?');
-    console.log(req.body);
-    console.log('What is res?');
-    console.log(res);
+    //console.log('What is req?');
+    //console.log(req.body);
+    //console.log('What is res?');
+    //console.log(res);
     const author = new Author({
         name: req.body.name, // posting된 body에서 name을 추출해서, name에 적용
     });
@@ -57,7 +57,9 @@ router.get('/:id', async (req, res) => {
     try {
         // params gives us all parameters that we define inside of our URL paths
         const author = await Author.findById(req.params.id);
-        const books = await Book.find({author: author.id}).limit(6).exec();
+        const books = await Book.find({author: author.id}).limit(10).exec();
+        console.log('books.length = ');
+        console.log(books.length);
         res.render('authors/show', {
             author: author,
             booksByAuthor: books,
