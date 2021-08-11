@@ -89,8 +89,8 @@ router.post('/', async (req, res) => {
     saveCover(book, req.body.cover); // FilePond적용후, coverImage를 저장하기 위한 함수
     try {
         const newBook = await book.save();
-        //res.redirect(`books/${newBook.id}`);
-        res.redirect('books');
+        res.redirect(`books/${newBook.id}`);
+        //res.redirect('books');
         console.log('req.file = ');
         console.log(req.file);
     } catch {
@@ -112,20 +112,108 @@ function removeBookCover(fileName) {
 }
 */
 
+// Show Books : /Books 페이지에서 특정 book 클릭후, 획득된 book의 id를 통해 book의 상세 내용을 show
+router.get('/:id', async (req, res) => {
+    try {
+        // populate : mongoDB의 Book 테이블의 author정보를 얻기 위해 Author 테이블 (name) 을 참조하기 위한 기능
+        const book = await Book.findById(req.params.id).populate('author').exec();
+        res.render('books/show', {book: book});     
+    } catch {
+        res.redirect('/');
+    }
+});
+
+// Edit Book Route
+router.get('/:id/edit', async (req, res) => {
+    try {
+        //const book = await Book.findById(req.params.id);
+        const book = await Book.findById(req.params.id).populate('author').exec();
+        console.log('Edit Book Route: book = ');
+        console.log(book.coverImage);
+        renderEditPage(res, book);
+    } catch {
+        res.redirect('/');
+    }
+});
+
+// Update Book Route
+router.put('/:id', async (req, res) => {
+    let book;
+    try {
+        book = await Book.findById(req.params.id);
+        console.log('Update Book Route: book.id =');
+        console.log(book);
+        book.title = req.body.title;
+        book.author = req.body.author;
+        book.publishDate = new Date(req.body.publishDate);
+        //book.publishDate = req.body.publishDate;
+        book.pageCount = req.body.pageCount;
+        book.description = req.body.description;
+        if (req.body.cover != null && req.body.cover !== '') {
+            saveCover(book, req.body.cover);
+        }
+        await book.save();
+        res.redirect(`/books/${book.id}`);
+        //res.redirect('/books');
+    } catch (err) {
+        console.log(err);
+
+        if (book != null) {
+            renderEditPage(res, book, true);
+        } else {
+            res.redirect('/');
+        }
+    }
+});
+
+// Delete Book
+router.delete('/:id', async (req, res) => {
+    let book;
+    try {
+        book = await Book.findById(req.params.id);
+        await book.remove();
+        res.redirect('/books');
+    } catch {
+        if (book == null) {
+            res.redirect('/');
+        } else {
+            res.render('books/show', {
+                book: book,
+                errorMessage: 'Could not remove book',
+            });
+        }
+    }
+});
+
 async function renderNewPage(res, book, hasError = false) {
+    renderFormPage(res, book, 'new', hasError);
+}
+
+async function renderEditPage(res, book, hasError = false) {
+    renderFormPage(res, book, 'edit', hasError);
+}
+
+async function renderFormPage(res, book, form, hasError = false) {
     try {
         const authors = await Author.find({});
+        //console.log('renderFormPage:book =');
+        //console.log(book);
+        //console.log(authors);
         const params = {
             authors: authors,
             book: book,
         }
-        if (hasError) params.errorMessage = 'Error Creating Book';
-        //const book = new Book(); // create new book
-        res.render('books/new', params); //Passing variables into new.ejs (from views)
-            
+        if (hasError) {
+            if (form === 'edit') {
+                params.errorMessage = "Error Updating Book";
+            } else {
+                params.errorMessage = "Error Editing Book";
+            }
+        }
+        res.render(`books/${form}`, params); //Passing variables into new.ejs or edit.ejs (from views)
     } catch {
-        res.redirect('/books'); //error발생될때, localhost:3000/books 페이지로 redirect
-    } 
+        res.redirect('/books'); ////error발생될때, localhost:3000/books 페이지로 redirect
+    }
 }
 
 function saveCover(book, coverEncoded) {

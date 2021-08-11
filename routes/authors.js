@@ -58,8 +58,8 @@ router.get('/:id', async (req, res) => {
         // params gives us all parameters that we define inside of our URL paths
         const author = await Author.findById(req.params.id);
         const books = await Book.find({author: author.id}).limit(10).exec();
-        console.log('books.length = ');
-        console.log(books.length);
+        //console.log('books.length = ');
+        //console.log(books.length);
         res.render('authors/show', {
             author: author,
             booksByAuthor: books,
@@ -87,8 +87,8 @@ router.put('/:id', async (req, res) => {
         author = await Author.findById(req.params.id);
         author.name = req.body.name;
         await author.save();    
-        //res.redirect(`/authors/${author.id}`);
-        res.redirect('/authors');
+        res.redirect(`/authors/${author.id}`);
+        //res.redirect('/authors');
 
     } catch {
         if (author == null) {
