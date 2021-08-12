@@ -14,13 +14,15 @@
 </form>
 <br>
 <% authors.forEach(author => { %>
-    <div><%= author.name %></div>
-    <div class="btn-row">
-        <a class="btn btn-primary" href="/authors/<%= author.id %>">View</a>
-        <a class="btn btn-primary" href="/authors/<%= author.id %>/edit">Edit</a>
-        <%- include('../partials/deleteForm.ejs', { url: `/authors/${author.id}` }) %>
-        <!-- <form method="POST" action="/authors/<%= author.id %>?_method=DELETE">
-            <button type="submit">Delete</button>
-        </form> -->
+    <div class="author-row">
+        <div class="author-name"><%= author.name %></div>
+        <div class="btn-row">
+            <a class="btn btn-primary" href="/authors/<%= author.id %>">View</a>
+            <a class="btn btn-primary" href="/authors/<%= author.id %>/edit">Edit</a>
+            <%- include('../partials/deleteForm.ejs', { url: `/authors/${author.id}` }) %>
+            <!-- <form method="POST" action="/authors/<%= author.id %>?_method=DELETE">
+                <button type="submit">Delete</button>
+            </form> -->
+        </div>
     </div>
 <% }) %>

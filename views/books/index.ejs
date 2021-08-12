@@ -26,12 +26,6 @@
 
     
 </form>
-
-<div>
-    <% books.forEach(book => { %> 
-        <a href="/books/<%= book.id %>">  <!-- 특정 book 클릭후, 해당 href로 이동 -->
-            <img height="150" width="100" src="<%= book.coverImagePath %>">
-        </a>
-    <% }) %>
-</div>
+<br>
+<%- include('../partials/bookGrid.ejs', {books: books, large: false}) %>
 
