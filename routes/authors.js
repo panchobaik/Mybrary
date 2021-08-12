@@ -72,7 +72,7 @@ router.get('/:id', async (req, res) => {
 
 // Edit Author + 저장된 author id값을 사용해서 특정 author 내용을 edit
 router.get('/:id/edit', async (req, res) => {
-    console.log('I am here');
+    //console.log('I am here');
     
     try {
         const author = await Author.findById(req.params.id);

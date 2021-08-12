@@ -2,6 +2,7 @@
 @import 'shared/variables.css'; /* 정의된 변수들 (var) 적용하기 위한 import */
 @import 'shared/header.css'; /* header전용으로 디자인된 css를 layout.ejs에서 간접으로 main.css를 통해 적용하기 위한 import */
 @import 'shared/button.css';
+@import 'shared/form.css';
 
 
 :root { /* :root represent the <html> element and is identical to the selector html */
