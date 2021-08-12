@@ -1,0 +1,40 @@
+:root {
+    --nav-title-font-size: 3rem;
+    --nav-title-font-weight: bold;
+    --nav-link-font-weight: 300;
+}
+.header-title {
+    color: var(--color-text-light);
+    text-decoration: none;
+    font-size: var(--nav-title-font-size);
+    font-weight: var(--nav-title-font-weight);
+}
+
+.header-nav {
+    display: flex;
+    flex-wrap: wrap; /* 화면 사이즈 변경에 대해 header가 안정적으로 wrapping*/
+    justify-content: space-between; /* children의 간격 조정 */
+    align-items: center;
+    margin-bottom: 5rem;
+}
+
+.header-nav ul { 
+    display: flex; /* <ul>에 속한 children <li>들을 flex items으로 설정 */
+    margin: 0;
+    padding: 0;
+}
+
+.header-nav li {
+    list-style: none; /* 각 <li> 앞단의 점 표시를 제거 */
+}
+
+.header-nav li a { /* 각 <li>의 child <a>의 href 디자인 */
+    text-decoration: none;
+    color: var(--color-text-light);
+    font-weight: var(--nav-link-font-weight);
+    padding: 1rem;
+}
+
+.header-nav li a:hover, .header-title:hover { /* header-title + <a>에 대해 hover 설정 */
+    color: white;
+}

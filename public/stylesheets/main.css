@@ -1,0 +1,34 @@
+@import 'shared/fonts.css'; /* Gotham Rounded 적용하기 위한 import */
+@import 'shared/variables.css'; /* 정의된 변수들 (var) 적용하기 위한 import */
+@import 'shared/header.css'; /* header전용으로 디자인된 css를 layout.ejs에서 간접으로 main.css를 통해 적용하기 위한 import */
+@import 'shared/button.css';
+
+
+:root { /* :root represent the <html> element and is identical to the selector html */
+    font-family: 'Gotham Rounded';
+    font-size: 20px;
+    color: var(--color-text-light);
+}
+
+*, *::before, *::after { /* 모든 (*) Elements들에 대해 padding 또는 margin을 쉽게 설정하기 위해서 box-sizing적용 */
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(to right, var(--color-background-dark), var(--color-background-light));
+}
+
+.container { /* 전체 body를 <div class="container">로 감싸고, header를 제외한 나머지 부분을 <div class="inner-container">로 감쌈 */
+    max-width: 1200px;
+    margin: auto;
+    margin-bottom: 3rem;
+}
+
+.inner-container { /* class inner-container 정의 */
+    margin: 0 2rem;
+}
+
+.page-header { /* index.ejs의 <h2> 디자인 목적*/
+    font-size: 2rem;
+    font-weight: 500;
+}
