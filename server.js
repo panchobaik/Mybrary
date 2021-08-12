@@ -1,6 +1,6 @@
 
 if (process.env.NODE_ENV !== 'production') {
-    console.log("I am here");
+    //console.log("I am here");
     require('dotenv').config(); 
 }
 

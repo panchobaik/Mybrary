@@ -11,6 +11,7 @@ const authorSchema = new mongoose.Schema({
     }
 });
 
+
 // 책 등록에 이미 적용된 author name을 잘못 delete되는 문제를 보호하는 설정
 // "pre" allows us to run a method before a certain action (=remove) occurs
 authorSchema.pre('remove', function(next) {
